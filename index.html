@@ -1104,6 +1104,47 @@
       // 11. Mulai rotasi nama testimoni (fade tiap 60 detik)
       setTimeout(rotateTestimoni, 60000);
     };
+    // Event listener untuk input & dropdown
+document.getElementById('input-idr').addEventListener('input', calculateCrypto);
+document.getElementById('select-coin').addEventListener('change', calculateCrypto);
+
+function calculateCrypto() {
+  const amountIDR = document.getElementById('input-idr').value;
+  const selectedCoinId = document.getElementById('select-coin').value;
+  const resultDisplay = document.getElementById('calc-result');
+  
+  // Ambil data koin yang dipilih dari array coins kita
+  const coinData = coins.find(c => c.id === selectedCoinId);
+  const priceUSD = livePrices[selectedCoinId];
+
+  if (amountIDR > 0 && priceUSD) {
+    const hargaPasarIDR = priceUSD * kursIDR;
+    const hargaJualKita = hargaPasarIDR * (1 + coinData.margin);
+    
+    // RUMUS: Jumlah Uang / Harga Jual Kita
+    const estimasiKoin = amountIDR / hargaJualKita;
+
+    // Tampilkan hasil (Jika ETH 6 desimal, jika koin lain 4 desimal)
+    const decimal = selectedCoinId === 'ethereum' ? 6 : 4;
+    resultDisplay.innerText = estimasiKoin.toFixed(decimal) + " " + coinData.name;
+  } else {
+    resultDisplay.innerText = "0.00";
+  }
+}
+
+// Fungsi kirim pesan WA otomatis
+function orderViaWA() {
+  const amount = document.getElementById('input-idr').value;
+  const coin = document.getElementById('select-coin').value;
+  const result = document.getElementById('calc-result').innerText;
+  
+  if(amount > 0) {
+    const message = `Halo Saka Crypto, saya ingin beli ${coin.toUpperCase()} senilai Rp ${parseInt(amount).toLocaleString('id-ID')}. Estimasi dapat: ${result}.`;
+    window.open(`https://wa.me/6283870088809?text=${encodeURIComponent(message)}`, '_blank');
+  } else {
+    alert("Masukkan jumlah pembelian dulu ya!");
+  }
+}
   </script>
 
 </body>

@@ -190,7 +190,47 @@
       </div>
     </div>
   </section>
+<!-- KALKULATOR CRYPTO SAKA -->
+<div class="max-w-4xl mx-auto px-5 mt-10">
+  <div class="bg-surface-800 border border-white/10 rounded-3xl p-6 shadow-xl">
+    <h3 class="text-xl font-bold mb-6 flex items-center gap-2">
+      <span class="w-2 h-6 bg-cyan-500 rounded-full"></span>
+      Kalkulator Estimasi
+    </h3>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Input Rupiah -->
+      <div>
+        <label class="block text-xs text-gray-400 mb-2 uppercase font-bold tracking-widest">Jumlah Beli (IDR)</label>
+        <input type="number" id="input-idr" placeholder="Contoh: 100000" 
+               class="w-full bg-black/50 border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-cyan-500 transition-all text-lg font-bold">
+      </div>
 
+      <!-- Pilih Koin -->
+      <div>
+        <label class="block text-xs text-gray-400 mb-2 uppercase font-bold tracking-widest">Pilih Aset</label>
+        <select id="select-coin" class="w-full bg-black/50 border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-cyan-500 transition-all text-lg font-bold appearance-none">
+          <option value="tether">USDT (Tether)</option>
+          <option value="solana">SOL (Solana)</option>
+          <option value="tron">TRX (Tron)</option>
+          <option value="ethereum">ETH (Ethereum)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Hasil Estimasi -->
+    <div class="mt-8 p-6 bg-cyan-500/10 border border-cyan-500/20 rounded-2xl text-center">
+      <p class="text-sm text-cyan-400 mb-1">Estimasi koin yang didapat:</p>
+      <div id="calc-result" class="text-3xl font-black text-white tracking-tight">0.00</div>
+      <p class="text-[10px] text-gray-500 mt-2 uppercase tracking-tighter">*Harga sudah termasuk biaya layanan (margin profit)</p>
+    </div>
+
+    <!-- Tombol Order Langsung -->
+    <button onclick="orderViaWA()" class="w-full mt-6 bg-white text-black font-bold py-4 rounded-2xl hover:bg-cyan-400 transition-all flex items-center justify-center gap-2 shadow-lg">
+      Beli Sekarang Via WhatsApp
+    </button>
+  </div>
+</div>
   <!-- LAYANAN -->
   <section class="py-20 sm:py-24 border-t border-white/5" id="layanan">
     <div class="max-w-5xl mx-auto px-5">

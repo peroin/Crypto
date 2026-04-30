@@ -1110,31 +1110,28 @@ document.getElementById('select-coin').addEventListener('change', calculateCrypt
  
 function calculateCrypto() {
   const amountIDR = document.getElementById('input-idr').value;
-  const selectedCoinId = document.getElementById('select-coin').value;
+  // Ini akan mengambil value seperti 'price-tether'
+  const selectedPriceId = document.getElementById('select-coin').value; 
   const resultDisplay = document.getElementById('calc-result');
   
-  // 1. Cari elemen harga di layar berdasarkan ID koin (misal: price-tether)
-  // Sesuaikan 'price-' dengan id yang kamu gunakan di kartu harga
-  const priceElement = document.getElementById('price-' + selectedCoinId);
+  // Mencari elemen berdasarkan ID (price-tether, price-solana, dll)
+  const priceElement = document.getElementById(selectedPriceId);
   
   if (amountIDR > 0 && priceElement) {
-    // 2. Ambil teks harga (misal: "$1.00"), hapus tanda $ dan koma
-    const priceText = priceElement.innerText.replace(/[$,]/g, '');
-    const priceUSD = parseFloat(priceText);
+    // Ambil teks harga (Contoh: "Rp 15.800"), hapus semua kecuali angka
+    const priceText = priceElement.innerText.replace(/[^0-9]/g, '');
+    const hargaSatuan = parseFloat(priceText);
 
-    if (!isNaN(priceUSD)) {
-      const kursIDR = 15800; // Sesuaikan kurs manual kamu
-      const margin = 0.02;   // Margin keuntungan 2%
-      
-      // 3. Hitung Harga Jual (Harga Pasar * Kurs * Margin)
-      const hargaJualIDR = (priceUSD * kursIDR) * (1 + margin);
-      const estimasiKoin = amountIDR / hargaJualIDR;
+    if (hargaSatuan > 0) {
+      // Hitung: Jumlah Uang / Harga Per Unit
+      const estimasiKoin = amountIDR / hargaSatuan;
 
-      // 4. Tentukan jumlah angka di belakang koma
-      const decimal = (selectedCoinId.includes('eth')) ? 6 : 4;
+      // Jika ETH gunakan 6 desimal, selain itu 4 desimal
+      const decimal = selectedPriceId.includes('eth') ? 6 : 4;
       
-      // 5. Tampilkan hasil
       resultDisplay.innerText = estimasiKoin.toFixed(decimal);
+    } else {
+      resultDisplay.innerText = "0.00";
     }
   } else {
     resultDisplay.innerText = "0.00";

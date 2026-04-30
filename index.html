@@ -1113,27 +1113,31 @@ function calculateCrypto() {
   const selectedCoinId = document.getElementById('select-coin').value;
   const resultDisplay = document.getElementById('calc-result');
   
-  // Gunakan variabel yang SUDAH ADA di kode live price kamu
-  // Saya asumsikan namanya tetap livePrices dan coins ya
-  if (typeof livePrices !== 'undefined' && typeof coins !== 'undefined') {
-    const priceData = livePrices[selectedCoinId];
-    const coinData = coins.find(c => c.id === selectedCoinId);
-    
-    // Ambil harga USD (tergantung struktur data CoinGecko kamu)
-    const priceUSD = (typeof priceData === 'object') ? priceData.usd : priceData;
+  // 1. Cari elemen harga di layar berdasarkan ID koin (misal: price-tether)
+  // Sesuaikan 'price-' dengan id yang kamu gunakan di kartu harga
+  const priceElement = document.getElementById('price-' + selectedCoinId);
+  
+  if (amountIDR > 0 && priceElement) {
+    // 2. Ambil teks harga (misal: "$1.00"), hapus tanda $ dan koma
+    const priceText = priceElement.innerText.replace(/[$,]/g, '');
+    const priceUSD = parseFloat(priceText);
 
-    if (amountIDR > 0 && priceUSD) {
-      const kursIDR = 15800; // Sesuaikan kursnya
-      const margin = coinData ? (coinData.margin || 0.02) : 0.02;
+    if (!isNaN(priceUSD)) {
+      const kursIDR = 15800; // Sesuaikan kurs manual kamu
+      const margin = 0.02;   // Margin keuntungan 2%
       
-      const hargaJual = (priceUSD * kursIDR) * (1 + margin);
-      const estimasiKoin = amountIDR / hargaJual;
+      // 3. Hitung Harga Jual (Harga Pasar * Kurs * Margin)
+      const hargaJualIDR = (priceUSD * kursIDR) * (1 + margin);
+      const estimasiKoin = amountIDR / hargaJualIDR;
 
-      const decimal = selectedCoinId === 'ethereum' ? 6 : 4;
-      resultDisplay.innerText = estimasiKoin.toFixed(decimal) + " " + (coinData ? coinData.name : "");
-    } else {
-      resultDisplay.innerText = "0.00";
+      // 4. Tentukan jumlah angka di belakang koma
+      const decimal = (selectedCoinId.includes('eth')) ? 6 : 4;
+      
+      // 5. Tampilkan hasil
+      resultDisplay.innerText = estimasiKoin.toFixed(decimal);
     }
+  } else {
+    resultDisplay.innerText = "0.00";
   }
 }
 

@@ -1115,30 +1115,28 @@ document.getElementById('input-idr').addEventListener('input', calculateCrypto);
 document.getElementById('select-coin').addEventListener('change', calculateCrypto);
  
 function calculateCrypto() {
-  const amountIDR = parseFloat(document.getElementById('input-idr').value);
+  const inputEl = document.getElementById('input-idr');
+  const amountIDR = parseFloat(inputEl.value);
   const selectedCoinId = document.getElementById('select-coin').value;
   const resultDisplay = document.getElementById('calc-result');
   
-  // 1. Ambil harga IDR langsung dari variabel priceData yang sudah jalan di web kamu
-  // Kita coba cari apakah datanya ada
   if (amountIDR > 0 && typeof priceData !== 'undefined' && priceData[selectedCoinId]) {
+    
+    // --- BAGIAN POTONGAN (MINUS) ---
+    // Misal: Potongan tetap 3000 rupiah, atau bisa pakai persen (amountIDR * 0.97)
+    // Di sini saya buatkan contoh potongan 3% agar adil
+    const nominalBersih = amountIDR * 0.96; 
     
     const hargaSatuan = priceData[selectedCoinId].idr;
 
     if (hargaSatuan > 0) {
-      // 2. Hitung estimasi koin
-      const estimasiKoin = amountIDR / hargaSatuan;
+      // Hitung pakai nominal yang sudah dipotong (nominalBersih)
+      const estimasiKoin = nominalBersih / hargaSatuan;
 
-      // 3. Tentukan jumlah desimal (ETH 6, lainnya 4)
       const decimal = (selectedCoinId === 'ethereum' || selectedCoinId.includes('eth')) ? 6 : 4;
-      
-      // 4. Tampilkan hasil
       resultDisplay.innerText = estimasiKoin.toFixed(decimal);
-    } else {
-      resultDisplay.innerText = "0.00";
     }
   } else {
-    // Jika data belum loading atau input kosong
     resultDisplay.innerText = "0.00";
   }
 }

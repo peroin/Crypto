@@ -207,14 +207,12 @@
       </div>
 
       <!-- Pilih Koin -->
-      <div>
-        <label class="block text-xs text-gray-400 mb-2 uppercase font-bold tracking-widest">Pilih Aset</label>
-        <select id="select-coin" class="w-full bg-black/50 border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-cyan-500 transition-all text-lg font-bold appearance-none">
-          <option value="tether">USDT (Tether)</option>
-          <option value="solana">SOL (Solana)</option>
-          <option value="tron">TRX (Tron)</option>
-          <option value="ethereum">ETH (Ethereum)</option>
-        </select>
+<select id="select-coin" onchange="calculateCrypto()">
+  <option value="tether">USDT</option>
+  <option value="solana">SOLANA</option>
+  <option value="tron">TRON</option>
+  <option value="ethereum">ETH BASE</option>
+</select>
       </div>
     </div>
 
@@ -1109,31 +1107,30 @@ document.getElementById('input-idr').addEventListener('input', calculateCrypto);
 document.getElementById('select-coin').addEventListener('change', calculateCrypto);
  
 function calculateCrypto() {
-  const amountIDR = document.getElementById('input-idr').value;
-  // Ini akan mengambil value seperti 'price-tether'
-  const selectedPriceId = document.getElementById('select-coin').value; 
+  const amountIDR = parseFloat(document.getElementById('input-idr').value);
+  const selectedCoinId = document.getElementById('select-coin').value;
   const resultDisplay = document.getElementById('calc-result');
   
-  // Mencari elemen berdasarkan ID (price-tether, price-solana, dll)
-  const priceElement = document.getElementById(selectedPriceId);
-  
-  if (amountIDR > 0 && priceElement) {
-    // Ambil teks harga (Contoh: "Rp 15.800"), hapus semua kecuali angka
-    const priceText = priceElement.innerText.replace(/[^0-9]/g, '');
-    const hargaSatuan = parseFloat(priceText);
+  // 1. Ambil harga IDR langsung dari variabel priceData yang sudah jalan di web kamu
+  // Kita coba cari apakah datanya ada
+  if (amountIDR > 0 && typeof priceData !== 'undefined' && priceData[selectedCoinId]) {
+    
+    const hargaSatuan = priceData[selectedCoinId].idr;
 
     if (hargaSatuan > 0) {
-      // Hitung: Jumlah Uang / Harga Per Unit
+      // 2. Hitung estimasi koin
       const estimasiKoin = amountIDR / hargaSatuan;
 
-      // Jika ETH gunakan 6 desimal, selain itu 4 desimal
-      const decimal = selectedPriceId.includes('eth') ? 6 : 4;
+      // 3. Tentukan jumlah desimal (ETH 6, lainnya 4)
+      const decimal = (selectedCoinId === 'ethereum' || selectedCoinId.includes('eth')) ? 6 : 4;
       
+      // 4. Tampilkan hasil
       resultDisplay.innerText = estimasiKoin.toFixed(decimal);
     } else {
       resultDisplay.innerText = "0.00";
     }
   } else {
+    // Jika data belum loading atau input kosong
     resultDisplay.innerText = "0.00";
   }
 }

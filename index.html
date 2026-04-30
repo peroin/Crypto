@@ -1108,17 +1108,6 @@
 document.getElementById('input-idr').addEventListener('input', calculateCrypto);
 document.getElementById('select-coin').addEventListener('change', calculateCrypto);
  
-    // Contoh data yang dibutuhkan agar fungsi tidak error
-let livePrices = {}; // Akan diisi oleh fetchPrices()
-let kursIDR = 15800; // Bisa statis atau diambil dari API
-const coins = [
-  { id: 'tether', name: 'USDT', margin: 0.02 },
-  { id: 'solana', name: 'SOL', margin: 0.03 },
-  { id: 'tron', name: 'TRX', margin: 0.02 },
-  { id: 'ethereum', name: 'ETH', margin: 0.02 }
-];
-
-
 function calculateCrypto() {
   const amountIDR = document.getElementById('input-idr').value;
   const selectedCoinId = document.getElementById('select-coin').value;

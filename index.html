@@ -206,15 +206,23 @@
                class="w-full bg-black/50 border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-cyan-500 transition-all text-lg font-bold">
       </div>
 
-      <!-- Pilih Koin -->
-<select id="select-coin" onchange="calculateCrypto()">
-  <option value="tether">USDT</option>
-  <option value="solana">SOLANA</option>
-  <option value="tron">TRON</option>
-  <option value="ethereum">ETH BASE</option>
-</select>
-      </div>
+      <!-- Pilih Aset -->
+<div>
+  <label class="block text-xs text-gray-400 mb-2 uppercase font-bold tracking-widest">Pilih Aset</label>
+  <div class="relative">
+    <select id="select-coin" onchange="calculateCrypto()" 
+            class="w-full bg-black/50 border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-cyan-500 transition-all text-lg font-bold appearance-none relative z-10">
+      <option value="tether" class="bg-surface-800">USDT (Tether)</option>
+      <option value="solana" class="bg-surface-800">SOL (Solana)</option>
+      <option value="tron" class="bg-surface-800">TRX (Tron)</option>
+      <option value="ethereum" class="bg-surface-800">ETH (Ethereum)</option>
+    </select>
+    <!-- Icon Panah (Opsional agar tidak kosong banget) -->
+    <div class="absolute right-5 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
+      <i data-lucide="chevron-down" class="w-5 h-5"></i>
     </div>
+  </div>
+</div>
 
     <!-- Hasil Estimasi -->
     <div class="mt-8 p-6 bg-cyan-500/10 border border-cyan-500/20 rounded-2xl text-center">

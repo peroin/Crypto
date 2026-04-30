@@ -1113,22 +1113,27 @@ function calculateCrypto() {
   const selectedCoinId = document.getElementById('select-coin').value;
   const resultDisplay = document.getElementById('calc-result');
   
-  // Ambil data koin yang dipilih dari array coins kita
-  const coinData = coins.find(c => c.id === selectedCoinId);
-  const priceUSD = livePrices[selectedCoinId];
-
-  if (amountIDR > 0 && priceUSD) {
-    const hargaPasarIDR = priceUSD * kursIDR;
-    const hargaJualKita = hargaPasarIDR * (1 + coinData.margin);
+  // Gunakan variabel yang SUDAH ADA di kode live price kamu
+  // Saya asumsikan namanya tetap livePrices dan coins ya
+  if (typeof livePrices !== 'undefined' && typeof coins !== 'undefined') {
+    const priceData = livePrices[selectedCoinId];
+    const coinData = coins.find(c => c.id === selectedCoinId);
     
-    // RUMUS: Jumlah Uang / Harga Jual Kita
-    const estimasiKoin = amountIDR / hargaJualKita;
+    // Ambil harga USD (tergantung struktur data CoinGecko kamu)
+    const priceUSD = (typeof priceData === 'object') ? priceData.usd : priceData;
 
-    // Tampilkan hasil (Jika ETH 6 desimal, jika koin lain 4 desimal)
-    const decimal = selectedCoinId === 'ethereum' ? 6 : 4;
-    resultDisplay.innerText = estimasiKoin.toFixed(decimal) + " " + coinData.name;
-  } else {
-    resultDisplay.innerText = "0.00";
+    if (amountIDR > 0 && priceUSD) {
+      const kursIDR = 15800; // Sesuaikan kursnya
+      const margin = coinData ? (coinData.margin || 0.02) : 0.02;
+      
+      const hargaJual = (priceUSD * kursIDR) * (1 + margin);
+      const estimasiKoin = amountIDR / hargaJual;
+
+      const decimal = selectedCoinId === 'ethereum' ? 6 : 4;
+      resultDisplay.innerText = estimasiKoin.toFixed(decimal) + " " + (coinData ? coinData.name : "");
+    } else {
+      resultDisplay.innerText = "0.00";
+    }
   }
 }
 

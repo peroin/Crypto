@@ -457,23 +457,37 @@
     // 3. FETCH DATA AWAL DARI COINCAP REST
     // ════════════════════════════════════════════════════════
     function fetchInitialPrices() {
-      var ids = coins.map(function(c) { return c.id; }).join(',');
-      var headers = {};
-      if (COINCAP_API_KEY) {
-        headers['Authorization'] = 'Bearer ' + COINCAP_API_KEY;
-      }
-      return fetch('https://api.coincap.io/v2/assets?ids=' + ids, { headers: headers })
-        .then(function(res) { return res.json(); })
-        .then(function(json) {
-          json.data.forEach(function(coin) {
-            livePrices[coin.id] = parseFloat(coin.priceUsd);
-          });
-          console.log('[CoinCap] Data awal ' + json.data.length + ' aset dimuat.');
-        })
-        .catch(function(err) {
-          console.error('[CoinCap] Gagal fetch data awal:', err.message);
+  var ids = coins.map(function(c) { return c.id; }).join(',');
+  
+  // Pastikan headers dikirim dengan benar
+  var headers = {
+    'Authorization': 'Bearer ' + COINCAP_API_KEY,
+    'Accept-Encoding': 'gzip' // CoinCap menyarankan ini
+  };
+
+  return fetch('https://api.coincap.io/v2/assets?ids=' + ids, { 
+      method: 'GET',
+      headers: headers 
+    })
+    .then(function(res) { 
+      if (!res.ok) throw new Error('HTTP error! status: ' + res.status);
+      return res.json(); 
+    })
+    .then(function(json) {
+      if (json.data) {
+        json.data.forEach(function(coin) {
+          livePrices[coin.id] = parseFloat(coin.priceUsd);
         });
-    }
+        updateUI(); // Pastikan ada fungsi untuk memperbarui tampilan setelah data didapat
+        console.log('[CoinCap] Data dimuat.');
+      }
+    })
+    .catch(function(err) {
+      console.error('[CoinCap] Gagal fetch:', err.message);
+      // Jika gagal, coba panggil lagi tanpa API Key (seringkali lebih lancar untuk publik)
+      fetchInitialPricesTanpaKey();
+    });
+}
 
     // ════════════════════════════════════════════════════════
     // 4. RENDER PRICE CARDS (dengan stok)

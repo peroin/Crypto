@@ -1045,6 +1045,34 @@
       setTimeout(animateCounters, 800);
     };
   </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function(){
+  var sb = window.supabase.createClient('https://spgrthzzqwedvtsjsbte.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNwZ3J0aHp6cXdlZHZ0c2pzYnRlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2MzEzMDUsImV4cCI6MjA5MzIwNzMwNX0.p5pqaOfe-brGn-6lcWEj01qw0F-dfp4cdN2ipOzeOg0');
+  var siteId = 'site_1777653186372_hjbzuc';
+  var siteName = 'Squidcrypto';
+  var sessionId = 's_' + Date.now() + '_' + Math.random().toString(36).substring(2,10);
+  var origin = location.origin || '';
 
+  document.addEventListener('click', function(e){
+    var el = e.target;
+    var tag = el.tagName.toLowerCase();
+    var text = (el.innerText || el.textContent || '').trim().substring(0, 100);
+    var sel = el.id ? '#'+el.id : el.className ? '.'+el.className.toString().trim().split(/\\s+/).join('.') : tag;
+    var href = el.href || null;
+
+    sb.from('click_events').insert({
+      site_id: siteId,
+      site_name: siteName,
+      session_id: sessionId,
+      tag: tag,
+      element_text: text,
+      selector: sel,
+      href: href,
+      page_path: location.href
+    }).then(function(){});
+  }, true);
+})();
+</script>
 </body>
 </html>
